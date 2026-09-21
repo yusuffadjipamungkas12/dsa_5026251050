@@ -5,11 +5,15 @@ public class ProjectorRental extends Rental {
     @Override 
     public int calculateCharge(){
         int days = getDays(); 
-        int setProject = 20000; 
-        if(getDays() > 3){
-            return (3*60000) + ((getDays()-3)*45000) + (getDays()*setProject);
+        int baseCharge; 
+        if(days <= 3){
+            baseCharge = days * 60000; 
         } else {
-            return (getDays()*60000);
+            baseCharge = (3*60000) + ((days -3)* 45000);
         }
+        return baseCharge + 20000;
+    }
+    public String label(){
+        return "Projector";
     }
 }
