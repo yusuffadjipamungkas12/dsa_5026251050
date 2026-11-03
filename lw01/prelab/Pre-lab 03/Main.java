@@ -1,130 +1,124 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class Main {
 
     public static void main(String[] args) {
-        solveProblem1();
-        solveProblem2();
-        solveProblem3();
+        soal1();
+        soal2();
+        soal3();
     }
 
-   
-    // Problem 1: Playlist Management (List)
-    public static void solveProblem1() {
-        List<String> playlist = new ArrayList<>();
+    // soal 1 - playlist
+    static void soal1() {
+        ArrayList<String> lagu = new ArrayList<>();
 
-        try (Scanner scanner = new Scanner(new File("playlist.txt"))) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim();
-                if (line.isEmpty()) continue;
+        try {
+            Scanner sc = new Scanner(new File("playlist.txt"));
+            while (sc.hasNextLine()) {
+                String baris = sc.nextLine().trim();
+                if (baris.length() == 0) continue;
 
-                String[] parts = line.split(" ", 2);
-                String command = parts[0];
+                String[] kata = baris.split("\\s+", 2);
+                String perintah = kata[0];
 
-                if (command.equals("ADD")) {
-                    String song = parts[1];
-                    playlist.add(song);
-                } else if (command.equals("INSERT")) {
-                    String[] insertParts = parts[1].split(" ", 2);
-                    int index = Integer.parseInt(insertParts[0]);
-                    String song = insertParts[1];
-                    playlist.add(index, song);
-                } else if (command.equals("REMOVE")) {
-                    String song = parts[1];
-                    playlist.remove(song); // Menghapus kemunculan pertama
+                switch (perintah) {
+                    case "ADD":
+                        lagu.add(kata[1]);
+                        break;
+                    case "INSERT":
+                        String[] sisa = kata[1].split("\\s+", 2);
+                        int posisi = Integer.parseInt(sisa[0]);
+                        lagu.add(posisi, sisa[1]);
+                        break;
+                    case "REMOVE":
+                        lagu.remove(kata[1]);
+                        break;
                 }
             }
+            sc.close();
         } catch (FileNotFoundException e) {
-            System.out.println("File playlist.txt tidak ditemukan.");
+            System.out.println("playlist.txt tidak ada");
             return;
         }
 
-        // Output Problem 1
         System.out.println("===== Problem 1 =====");
-        System.out.println("Total songs: " + playlist.size());
-        for (int i = 0; i < playlist.size(); i++) {
-            System.out.println((i + 1) + ": " + playlist.get(i));
+        System.out.println("Total songs: " + lagu.size());
+        int no = 1;
+        for (String l : lagu) {
+            System.out.println(no + ": " + l);
+            no++;
         }
     }
 
-  
-    // Problem 2: Workshop Participants (Set)
+    // soal 2 - peserta workshop
+    static void soal2() {
+        Set<String> peserta = new LinkedHashSet<>();
+        int ganda = 0;
 
-    public static void solveProblem2() {
-        // LinkedHashSet digunakan untuk mempertahankan urutan kemunculan pertama
-        Set<String> participants = new LinkedHashSet<>();
-        int duplicateCount = 0;
+        try {
+            Scanner sc = new Scanner(new File("participants.txt"));
+            while (sc.hasNextLine()) {
+                String nama = sc.nextLine().trim();
+                if (nama.isEmpty()) continue;
 
-        try (Scanner scanner = new Scanner(new File("participants.txt"))) {
-            while (scanner.hasNextLine()) {
-                String name = scanner.nextLine().trim();
-                if (name.isEmpty()) continue;
-
-                if (!participants.add(name)) {
-                    duplicateCount++;
-                }
+                boolean baru = peserta.add(nama);
+                if (!baru) ganda++;
             }
+            sc.close();
         } catch (FileNotFoundException e) {
-            System.out.println("File participants.txt tidak ditemukan.");
+            System.out.println("participants.txt tidak ada");
             return;
         }
 
-        // Output Problem 2
         System.out.println("===== Problem 2 =====");
-        System.out.println("Unique participants: " + participants.size());
-        int index = 1;
-        for (String participant : participants) {
-            System.out.println(index + ". " + participant);
-            index++;
+        System.out.println("Unique participants: " + peserta.size());
+        int urut = 1;
+        for (String p : peserta) {
+            System.out.println(urut + ". " + p);
+            urut++;
         }
-        System.out.println("Duplicate registrations: " + duplicateCount);
+        System.out.println("Duplicate registrations: " + ganda);
     }
 
-    // Problem 3: Product Inventory (Map)
+    // soal 3 - stok produk
+    static void soal3() {
+        Map<String, Integer> stok = new LinkedHashMap<>();
+        int gagal = 0;
 
-    public static void solveProblem3() {
-        // LinkedHashMap digunakan untuk mempertahankan urutan produk pertama kali muncul
-        Map<String, Integer> inventory = new LinkedHashMap<>();
-        int failedSales = 0;
+        try {
+            Scanner sc = new Scanner(new File("inventory.txt"));
+            while (sc.hasNextLine()) {
+                String baris = sc.nextLine().trim();
+                if (baris.isEmpty()) continue;
 
-        try (Scanner scanner = new Scanner(new File("inventory.txt"))) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim();
-                if (line.isEmpty()) continue;
+                String[] data = baris.split("\\s+");
+                String aksi = data[0];
+                String barang = data[1];
+                int jumlah = Integer.parseInt(data[2]);
 
-                String[] parts = line.split(" ");
-                String type = parts[0];
-                String product = parts[1];
-                int quantity = Integer.parseInt(parts[2]);
-
-                if (type.equals("ADD")) {
-                    inventory.put(product, inventory.getOrDefault(product, 0) + quantity);
-                } else if (type.equals("SELL")) {
-                    if (inventory.containsKey(product) && inventory.get(product) >= quantity) {
-                        inventory.put(product, inventory.get(product) - quantity);
+                if (aksi.equals("ADD")) {
+                    int lama = stok.containsKey(barang) ? stok.get(barang) : 0;
+                    stok.put(barang, lama + jumlah);
+                } else if (aksi.equals("SELL")) {
+                    if (stok.containsKey(barang) && stok.get(barang) >= jumlah) {
+                        stok.put(barang, stok.get(barang) - jumlah);
                     } else {
-                        failedSales++;
+                        gagal++;
                     }
                 }
             }
+            sc.close();
         } catch (FileNotFoundException e) {
-            System.out.println("File inventory.txt tidak ditemukan.");
+            System.out.println("inventory.txt tidak ada");
             return;
         }
 
-        // Output Problem 3
         System.out.println("===== Problem 3 =====");
-        for (Map.Entry<String, Integer> entry : inventory.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
+        for (String barang : stok.keySet()) {
+            System.out.println(barang + ": " + stok.get(barang));
         }
-        System.out.println("Failed sales: " + failedSales);
+        System.out.println("Failed sales: " + gagal);
     }
 }
