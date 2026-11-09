@@ -1,54 +1,61 @@
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class RidTimeHop {
 
-    static void insertionSortDesc(int[] a, int passes) {
-        for (int i = 1; i <= passes && i < a.length; i++) {
-            int key = a[i];
+    public static void insertionSortDesc(int[] data, int passes) {
+        for (int i = 1; i <= passes && i < data.length; i++) {
+            int key = data[i];
             int j = i - 1;
-            while (j >= 0 && a[j] < key) {
-                a[j + 1] = a[j];
+            while (j >= 0 && data[j] < key) {
+                data[j + 1] = data[j];
                 j--;
             }
-            a[j + 1] = key;
+            data[j + 1] = key;
         }
     }
 
-    static int linearSearch(int[] a, int target) {
-        for (int i = 0; i < a.length; i++) {
-            if (a[i] == target) return i;
+    public static int linearSearch(int[] data, int target) {
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] == target) {
+                return i;
+            }
         }
         return -1;
     }
 
     public static void main(String[] args) {
-        try (Scanner sc = new Scanner(new File("branches.txt"))) {
-            int n = sc.nextInt();
-            int[] branches = new int[n];
-            for (int i = 0; i < n; i++) branches[i] = sc.nextInt();
+        Scanner sc = new Scanner(RidTimeHop.class.getResourceAsStream("/branches.txt"));
 
-            int m = sc.nextInt();
-            int[] targets = new int[m];
-            for (int i = 0; i < m; i++) targets[i] = sc.nextInt();
+        int n = sc.nextInt();
+        int[] branches = new int[n];
+        for (int i = 0; i < n; i++) {
+            branches[i] = sc.nextInt();
+        }
 
-            insertionSortDesc(branches, 3);
+        int m = sc.nextInt();
+        int[] targets = new int[m];
+        for (int i = 0; i < m; i++) {
+            targets[i] = sc.nextInt();
+        }
+        sc.close();
 
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < n; i++) {
-                if (i > 0) sb.append(" ");
-                sb.append(branches[i]);
+        insertionSortDesc(branches, 3);
+
+        for (int i = 0; i < n; i++) {
+            System.out.print(branches[i]);
+            if (i < n - 1) {
+                System.out.print(" ");
             }
-            System.out.println(sb);
+        }
+        System.out.println();
 
-            for (int t : targets) {
-                int idx = linearSearch(branches, t);
-                if (idx >= 0) System.out.println(t + ": FOUND at index " + idx);
-                else System.out.println(t + ": NOT FOUND");
+        for (int i = 0; i < m; i++) {
+            int idx = linearSearch(branches, targets[i]);
+            if (idx == -1) {
+                System.out.println(targets[i] + ": NOT FOUND");
+            } else {
+                System.out.println(targets[i] + ": FOUND at index " + idx);
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("File branches.txt tidak ditemukan.");
         }
     }
 }

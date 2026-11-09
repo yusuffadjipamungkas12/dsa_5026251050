@@ -14,7 +14,7 @@ public class Main {
     static void soal1() {
         ArrayList<String> lagu = new ArrayList<>();
 
-        try {
+        
             Scanner sc = new Scanner(new File("playlist.txt"));
             while (sc.hasNextLine()) {
                 String baris = sc.nextLine().trim();
@@ -38,11 +38,7 @@ public class Main {
                 }
             }
             sc.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("playlist.txt tidak ada");
-            return;
-        }
-
+       
         System.out.println("===== Problem 1 =====");
         System.out.println("Total songs: " + lagu.size());
         int no = 1;

@@ -38,8 +38,8 @@ class main {
 
         for(int i = 0; i < n-1; i++){
             int minIdx = i; 
-            for(int j = i+1; j < n-1; j++){
-                if(data [j] < data [minIdx]){
+            for(int j = i+1; j < n; j++){
+                if(data [j] > data [minIdx]){
                     minIdx = j; 
                 }
             }

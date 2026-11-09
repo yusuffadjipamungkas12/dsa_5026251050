@@ -26,7 +26,7 @@ public class Main {
             return;
         }
 
-        // Runtime polymorphism: memanggil summary() tanpa instanceof atau casting
+        
         for (PrintJob job : jobs) {
             System.out.println(job.summary());
         }
